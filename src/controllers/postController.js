@@ -51,9 +51,55 @@ const retrieveAllUserPosts = async (req, res) => {
   }
 };
 
+const update = async (req, res) => {
+  try {
+    if (String(req.user._id) !== String(req.post.user)) {
+      return res.message(HttpStatus.UNAUTHORIZED, '');
+    }
+
+    let updateFields = { ...req.body };
+
+    if (req.file) {
+      if (req.post.image) {
+        await utils.s3.remove(req.post.image);
+      }
+
+      updateFields.image = await utils.s3.upload(req.file);
+    }
+
+    const post = await req.db.Post.findByIdAndUpdate(
+      { _id: req.post.id },
+      updateFields,
+      { new: true }
+    );
+
+    return res.message(HttpStatus.OK, { post });
+  } catch (e) {
+    req.logger.error(e);
+    return res.error();
+  }
+};
+
+const remove = async (req, res) => {
+  try {
+    if (String(req.user._id) !== String(req.post.user)) {
+      return res.message(HttpStatus.UNAUTHORIZED, '');
+    }
+
+    await req.db.Post.findByIdAndDelete({ _id: req.post.id });
+
+    return res.message(HttpStatus.NO_CONTENT, '');
+  } catch (e) {
+    req.logger.error(e);
+    return res.error();
+  }
+};
+
 module.exports = {
   create,
   retrieveOne,
   retrieveAll,
-  retrieveAllUserPosts
+  retrieveAllUserPosts,
+  update,
+  remove
 };

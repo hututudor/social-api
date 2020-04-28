@@ -22,4 +22,20 @@ router.get(
   controllers.postController.retrieveAllUserPosts
 );
 
+router.put(
+  '/:id',
+  middlewares.auth,
+  middlewares.post,
+  middlewares.upload.single('image'),
+  middlewares.validate(validators.post.update),
+  controllers.postController.update
+);
+
+router.delete(
+  '/:id',
+  middlewares.auth,
+  middlewares.post,
+  controllers.postController.remove
+);
+
 module.exports = router;
