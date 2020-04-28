@@ -14,4 +14,6 @@ router.put(
   controllers.userController.update
 );
 
+router.delete('/', middlewares.auth, controllers.userController.remove);
+
 module.exports = router;

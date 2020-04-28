@@ -27,6 +27,28 @@ const upload = async file => {
   }
 };
 
+const remove = async fileName => {
+  try {
+    const s3 = new AWS.S3();
+
+    const fileKey = fileName.replace(
+      `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/`,
+      ''
+    );
+
+    await s3
+      .deleteObject({
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: fileKey
+      })
+      .promise();
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+};
+
 module.exports = {
-  upload
+  upload,
+  remove
 };

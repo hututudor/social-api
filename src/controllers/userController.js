@@ -41,6 +41,10 @@ const update = async (req, res) => {
     }
 
     if (req.file) {
+      if (req.user.profilePicture) {
+        await utils.s3.remove(req.user.profilePicture);
+      }
+
       updateFields.profilePicture = await utils.s3.upload(req.file);
     }
 
@@ -59,7 +63,19 @@ const update = async (req, res) => {
   }
 };
 
+const remove = async (req, res) => {
+  try {
+    await req.db.User.findByIdAndDelete({ _id: req.user.id });
+
+    return res.message(HttpStatus.NO_CONTENT, '');
+  } catch (e) {
+    req.logger.error(e);
+    return res.error();
+  }
+};
+
 module.exports = {
   me,
-  update
+  update,
+  remove
 };
