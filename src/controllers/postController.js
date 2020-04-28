@@ -39,7 +39,7 @@ const retrieveAll = async (req, res) => {
 
 const retrieveAllUserPosts = async (req, res) => {
   try {
-    const posts = await req.db.Post.find({ user: req.userParam })
+    const posts = await req.db.Post.find({ user: req.userParam.id })
       .skip(parseInt(req.query.skip))
       .limit(parseInt(req.query.limit))
       .sort('-createdAt');
@@ -57,7 +57,7 @@ const update = async (req, res) => {
       return res.message(HttpStatus.UNAUTHORIZED, '');
     }
 
-    let updateFields = { ...req.body };
+    let updateFields = { ...req.body, updatedAt: new Date() };
 
     if (req.file) {
       if (req.post.image) {
@@ -73,7 +73,7 @@ const update = async (req, res) => {
       { new: true }
     );
 
-    return res.message(HttpStatus.OK, { post });
+    return res.success(HttpStatus.OK, { post });
   } catch (e) {
     req.logger.error(e);
     return res.error();
