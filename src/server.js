@@ -8,6 +8,10 @@ const morgan = require('morgan');
 const winston = require('winston');
 require('winston-daily-rotate-file');
 
+const routes = require('./routes');
+const db = require('./models');
+const utils = require('./utils');
+
 const createLogger = () => {
   const transport = new winston.transports.DailyRotateFile({
     filename: 'logs/server-%DATE%.log',
@@ -41,6 +45,12 @@ const applyMiddlewares = async app => {
 
   app.use((req, res, next) => {
     req.logger = logger;
+    req.db = db;
+
+    res.success = utils.response.success(res);
+    res.error = utils.response.error(res);
+    res.message = utils.response.message(res);
+
     next();
   });
 };
@@ -51,9 +61,7 @@ const server = async () => {
   await connectToDatabase();
   await applyMiddlewares(app);
 
-  // app.use((error, req, res) => {
-  //   return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(error);
-  // });
+  app.use('/', routes);
 
   return app;
 };
