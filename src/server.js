@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const AWS = require('aws-sdk');
 const bodyParser = require('body-parser');
 const HttpStatus = require('http-status-codes');
 const cors = require('cors');
@@ -22,7 +23,7 @@ const createLogger = () => {
   });
 
   return winston.createLogger({
-    transports: [transport]
+    transports: [transport, new winston.transports.Console()]
   });
 };
 
@@ -30,7 +31,8 @@ const connectToDatabase = async () => {
   return mongoose.connect(process.env.DB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useFindAndModify: false
   });
 };
 
@@ -55,11 +57,20 @@ const applyMiddlewares = async app => {
   });
 };
 
+const configureAWS = () => {
+  AWS.config.update({
+    accessKeyId: process.env.AWS_IAM_ID,
+    secretAccessKey: process.env.AWS_IAM_SECRET,
+    region: process.env.AWS_S3_BUCKET_REGION
+  });
+};
+
 const server = async () => {
   const app = express();
 
   await connectToDatabase();
   await applyMiddlewares(app);
+  configureAWS();
 
   app.use('/', routes);
 

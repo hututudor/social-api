@@ -1,4 +1,5 @@
 module.exports = {
   validate: require('./validate'),
-  auth: require('./auth')
+  auth: require('./auth'),
+  upload: require('./upload')
 };

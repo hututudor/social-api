@@ -3,3 +3,4 @@ node_modules
 logs
 config/.env.dev
 config/.env.prod
+uploads
