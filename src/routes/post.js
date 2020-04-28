@@ -12,4 +12,14 @@ router.post(
   controllers.postController.create
 );
 
+router.get('/:id', middlewares.post, controllers.postController.retrieveOne);
+
+router.get('/', controllers.postController.retrieveAll);
+
+router.get(
+  '/user/:id',
+  middlewares.user,
+  controllers.postController.retrieveAllUserPosts
+);
+
 module.exports = router;

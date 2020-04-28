@@ -19,6 +19,41 @@ const create = async (req, res) => {
   }
 };
 
+const retrieveOne = (req, res) => {
+  return res.success(HttpStatus.OK, { post: req.post });
+};
+
+const retrieveAll = async (req, res) => {
+  try {
+    const posts = await req.db.Post.find({})
+      .skip(parseInt(req.query.skip))
+      .limit(parseInt(req.query.limit))
+      .sort('-createdAt');
+
+    return res.success(HttpStatus.OK, { posts });
+  } catch (e) {
+    req.logger.error(e);
+    return res.error();
+  }
+};
+
+const retrieveAllUserPosts = async (req, res) => {
+  try {
+    const posts = await req.db.Post.find({ user: req.userParam })
+      .skip(parseInt(req.query.skip))
+      .limit(parseInt(req.query.limit))
+      .sort('-createdAt');
+
+    return res.success(HttpStatus.OK, { posts });
+  } catch (e) {
+    req.logger.error(e);
+    return res.error();
+  }
+};
+
 module.exports = {
-  create
+  create,
+  retrieveOne,
+  retrieveAll,
+  retrieveAllUserPosts
 };
