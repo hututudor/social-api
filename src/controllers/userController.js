@@ -9,7 +9,9 @@ const me = (req, res) => {
 
 const update = async (req, res) => {
   try {
-    let updateFields = {};
+    let updateFields = {
+      updatedAt: new Date()
+    };
 
     if (req.body.name) {
       updateFields.name = req.body.name;
