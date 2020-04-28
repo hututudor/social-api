@@ -5,7 +5,7 @@ module.exports = schema => (req, res, next) => {
     schema.validateSync(req.body);
     next();
   } catch (e) {
-    console.log(e);
-    return res.status(HttpStatus.BAD_REQUEST).json({ errors: e.errors });
+    req.logger.error(e);
+    return res.message(HttpStatus.BAD_REQUEST, e.errors);
   }
 };

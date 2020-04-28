@@ -10,4 +10,10 @@ router.post(
   controllers.authController.register
 );
 
+router.post(
+  '/login',
+  middlewares.validate(validators.auth.login),
+  controllers.authController.login
+);
+
 module.exports = router;
