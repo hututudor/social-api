@@ -1,0 +1,5 @@
+node_modules
+.idea
+logs
+config/.env.dev
+config/.env.prod
