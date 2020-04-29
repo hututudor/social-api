@@ -82,7 +82,12 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    if (String(req.user._id) !== String(req.comment.user)) {
+    const post = await req.db.Post.findOne({ _id: req.comment.post });
+
+    if (
+      String(req.user._id) !== String(req.comment.user) &&
+      String(req.user._id) !== String(post.user)
+    ) {
       return res.message(HttpStatus.UNAUTHORIZED, '');
     }
 
