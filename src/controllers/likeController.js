@@ -1,5 +1,7 @@
 const HttpStatus = require('http-status-codes');
 
+const utils = require('../utils');
+
 const create = async (req, res) => {
   try {
     const existingLike = await req.db.Like.findOne({
@@ -20,6 +22,13 @@ const create = async (req, res) => {
     await req.db.Post.findByIdAndUpdate(
       { _id: req.post.id },
       { likes: req.post.likes + 1 }
+    );
+    await utils.notify(
+      req.post.user,
+      `${req.user.name} likes your '${utils.truncate(
+        req.post.content,
+        30
+      )}' post`
     );
 
     return res.success(HttpStatus.CREATED, { like });
@@ -58,6 +67,13 @@ const remove = async (req, res) => {
     await req.db.Post.findByIdAndUpdate(
       { _id: req.post.id },
       { likes: req.post.likes - 1 }
+    );
+    await utils.notify(
+      req.post.user,
+      `${req.user.name} does not like your '${utils.truncate(
+        req.post.content,
+        30
+      )}' post anymore`
     );
 
     return res.success(HttpStatus.NO_CONTENT, '');

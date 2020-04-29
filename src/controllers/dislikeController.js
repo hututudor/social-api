@@ -1,5 +1,7 @@
 const HttpStatus = require('http-status-codes');
 
+const util = require('../utils');
+
 const create = async (req, res) => {
   try {
     const existingDislike = await req.db.Dislike.findOne({
@@ -20,6 +22,13 @@ const create = async (req, res) => {
     await req.db.Post.findByIdAndUpdate(
       { _id: req.post.id },
       { dislikes: req.post.dislikes + 1 }
+    );
+    await utils.notify(
+      req.post.user,
+      `${req.user.name} dislikes your '${utils.truncate(
+        req.post.content,
+        30
+      )}' post`
     );
 
     return res.success(HttpStatus.CREATED, { dislike });
@@ -61,6 +70,13 @@ const remove = async (req, res) => {
     await req.db.Post.findByIdAndUpdate(
       { _id: req.post.id },
       { dislikes: req.post.dislikes - 1 }
+    );
+    await utils.notify(
+      req.post.user,
+      `${req.user.name} does not dislike your '${utils.truncate(
+        req.post.content,
+        30
+      )}' post anymore`
     );
 
     return res.success(HttpStatus.NO_CONTENT, '');

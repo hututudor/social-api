@@ -11,6 +11,13 @@ const create = async (req, res) => {
     }
 
     const comment = await new req.db.Comment(creationData).save();
+    await utils.notify(
+      req.post.user,
+      `${req.user.name} commented '${utils.truncate(
+        comment.content,
+        30
+      )}' on your '${utils.truncate(req.post.content, 30)}' post`
+    );
 
     return res.success(HttpStatus.CREATED, { comment });
   } catch (e) {
