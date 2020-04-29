@@ -5,5 +5,6 @@ module.exports = {
   likeController: require('./likeController'),
   dislikeController: require('./dislikeController'),
   followerController: require('./followerController'),
-  commentController: require('./commentController')
+  commentController: require('./commentController'),
+  notificationController: require('./notificationController')
 };

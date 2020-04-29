@@ -7,5 +7,6 @@ router.use('/likes', require('./like'));
 router.use('/dislikes', require('./dislike'));
 router.use('/followers', require('./follower'));
 router.use('/comments', require('./comment'));
+router.use('/notifications', require('./notification'));
 
 module.exports = router;
