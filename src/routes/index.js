@@ -5,5 +5,6 @@ router.use('/users', require('./user'));
 router.use('/posts', require('./post'));
 router.use('/likes', require('./like'));
 router.use('/dislikes', require('./dislike'));
+router.use('/followers', require('./follower'));
 
 module.exports = router;
