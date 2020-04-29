@@ -4,5 +4,6 @@ module.exports = {
   postController: require('./postController'),
   likeController: require('./likeController'),
   dislikeController: require('./dislikeController'),
-  followerController: require('./followerController')
+  followerController: require('./followerController'),
+  commentController: require('./commentController')
 };

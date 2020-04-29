@@ -3,5 +3,6 @@ module.exports = {
   auth: require('./auth'),
   upload: require('./upload'),
   post: require('./post'),
-  user: require('./user')
+  user: require('./user'),
+  comment: require('./comment')
 };
