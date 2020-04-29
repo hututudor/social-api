@@ -4,5 +4,6 @@ module.exports = {
   upload: require('./upload'),
   post: require('./post'),
   user: require('./user'),
-  comment: require('./comment')
+  comment: require('./comment'),
+  notification: require('./notification')
 };

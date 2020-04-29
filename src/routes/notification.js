@@ -9,4 +9,17 @@ router.get(
   controllers.notificationController.retrieveAllNotifications
 );
 
+router.delete(
+  '/:id',
+  middlewares.auth,
+  middlewares.notification,
+  controllers.notificationController.remove
+);
+
+router.delete(
+  '/',
+  middlewares.auth,
+  controllers.notificationController.removeAll
+);
+
 module.exports = router;
