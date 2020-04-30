@@ -26,6 +26,14 @@ const userSchema = new Schema({
     type: String,
     required: false
   },
+  confirmed: {
+    type: Boolean,
+    default: null
+  },
+  confirmation: {
+    type: String,
+    nullable: true
+  },
   createdAt: {
     type: Date,
     default: Date.now()
@@ -39,6 +47,7 @@ const userSchema = new Schema({
 userSchema.methods.toJSON = function() {
   const obj = this.toObject();
   delete obj.password;
+  delete obj.confirmation;
   return obj;
 };
 

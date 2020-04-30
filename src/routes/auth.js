@@ -16,4 +16,6 @@ router.post(
   controllers.authController.login
 );
 
+router.get('/confirm/:confirmation', controllers.authController.confirm);
+
 module.exports = router;

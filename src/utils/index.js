@@ -3,5 +3,6 @@ module.exports = {
   jwt: require('./jwt'),
   s3: require('./s3.js'),
   notify: require('./notify'),
-  truncate: require('./truncate')
+  truncate: require('./truncate'),
+  mail: require('./mail')
 };

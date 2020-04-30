@@ -1,5 +1,6 @@
 const HttpStatus = require('http-status-codes');
 const bcrypt = require('bcryptjs');
+const uuid = require('uuid');
 
 const utils = require('../utils');
 
@@ -18,14 +19,17 @@ const register = async (req, res) => {
       bcrypt.genSaltSync(10)
     );
 
+    const confirmation = uuid.v4().replace(/-/g, '');
+
     const user = await req.db.User.create({
       ...req.body,
-      password
+      password,
+      confirmation
     });
 
-    const token = utils.jwt.create(user.id);
+    await utils.mail.sendConfirmationMail(user.email, confirmation);
 
-    return res.success(HttpStatus.CREATED, { user, token });
+    return res.success(HttpStatus.CREATED, { user });
   } catch (e) {
     req.logger.error(e);
     return res.error();
@@ -42,6 +46,10 @@ const login = async (req, res) => {
       return res.message(HttpStatus.NOT_FOUND, 'Incorrect email or password');
     }
 
+    if (!user.confirmed) {
+      return res.message(HttpStatus.NOT_FOUND, 'Account not confirmed');
+    }
+
     const token = utils.jwt.create(user.id);
 
     return res.success(HttpStatus.OK, { user, token });
@@ -51,7 +59,32 @@ const login = async (req, res) => {
   }
 };
 
+const confirm = async (req, res) => {
+  try {
+    const user = await req.db.User.findOne({
+      confirmation: req.params.confirmation
+    });
+
+    if (!user) {
+      return res.status(HttpStatus.NOT_FOUND).send('User not found');
+    }
+
+    await req.db.User.findByIdAndUpdate(
+      { _id: user.id },
+      { confirmed: true, confirmation: '' }
+    );
+
+    return res
+      .status(HttpStatus.OK)
+      .send('Your account has been verified. You can now login.');
+  } catch (e) {
+    req.logger.error(e);
+    return res.error;
+  }
+};
+
 module.exports = {
   register,
-  login
+  login,
+  confirm
 };
