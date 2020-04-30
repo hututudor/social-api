@@ -10,5 +10,6 @@ router.use('/comments', require('./comment'));
 router.use('/notifications', require('./notification'));
 router.use('/suggestions', require('./suggestion'));
 router.use('/feed', require('./feed'));
+router.use('/search', require('./search'));
 
 module.exports = router;

@@ -5,6 +5,7 @@ const generate = async (req, res) => {
     const followings = await req.db.Follower.find({ user: req.user.id })
       .skip(parseInt(req.query.skip))
       .limit(parseInt(req.query.limit))
+      .sort('-createdAt')
       .select('following');
 
     if (followings.length === 0) {

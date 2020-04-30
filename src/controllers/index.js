@@ -8,5 +8,6 @@ module.exports = {
   commentController: require('./commentController'),
   notificationController: require('./notificationController'),
   suggestionController: require('./suggestionController'),
-  feedController: require('./feedController')
+  feedController: require('./feedController'),
+  searchController: require('./searchController')
 };
