@@ -5,19 +5,22 @@ const generate = async (req, res) => {
     const followings = await req.db.Follower.find({ user: req.user.id })
       .skip(parseInt(req.query.skip))
       .limit(parseInt(req.query.limit))
+      .sort('-createdAt')
       .select('following');
 
     if (followings.length === 0) {
-      return res.message(HttpStatus.NOT_FOUND, 'No suggestions available');
+      return res.message(HttpStatus.NOT_FOUND, 'No feed available');
     }
 
-    const suggestions = await Promise.all(
+    let feed = await Promise.all(
       followings.map(following =>
-        req.db.User.findOne({ _id: following.following })
+        req.db.Post.find({ user: following.following })
       )
     );
 
-    return res.success(HttpStatus.OK, { suggestions });
+    feed = [].concat.apply([], feed);
+
+    return res.success(HttpStatus.OK, { feed });
   } catch (e) {
     req.logger.error(e);
     return res.error();

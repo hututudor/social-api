@@ -6,9 +6,9 @@ const controllers = require('../controllers');
 
 router.post(
   '/:id',
-  middlewares.upload.single('image'),
   middlewares.auth,
   middlewares.post,
+  middlewares.upload.single('image'),
   middlewares.validate(validators.comment.create),
   controllers.commentController.create
 );
