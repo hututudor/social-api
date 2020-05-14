@@ -1,6 +1,6 @@
 const HttpStatus = require('http-status-codes');
 
-const util = require('../utils');
+const utils = require('../utils');
 
 const create = async (req, res) => {
   try {
