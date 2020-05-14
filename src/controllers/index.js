@@ -7,7 +7,6 @@ module.exports = {
   followerController: require('./followerController'),
   commentController: require('./commentController'),
   notificationController: require('./notificationController'),
-  suggestionController: require('./suggestionController'),
   feedController: require('./feedController'),
   searchController: require('./searchController')
 };
